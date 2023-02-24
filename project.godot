@@ -8,9 +8,32 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "Card",
+"language": "GDScript",
+"path": "res://Card.gd"
+}, {
+"base": "Node",
+"class": "ShapeBehaviour",
+"language": "GDScript",
+"path": "res://ShapeBehaviours/Shape_Behaviour.gd"
+}, {
+"base": "ShapeBehaviour",
+"class": "ShapeL",
+"language": "GDScript",
+"path": "res://ShapeBehaviours/ShapeL.gd"
+} ]
+_global_script_class_icons={
+"Card": "",
+"ShapeBehaviour": "",
+"ShapeL": ""
+}
+
 [application]
 
 config/name="Water we doing"
+run/main_scene="res://Game.tscn"
 config/icon="res://icon.png"
 
 [gui]
