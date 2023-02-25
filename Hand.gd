@@ -19,8 +19,10 @@ func play(a):
 		if hand[e].get_shape_name() == a.get_shape_name():
 			hand.delete(hand[e])
 	
+	deck._discard = hand # dump the hand to the discard pile
 	discard_hand()
 			
 func discard_hand():
 	hand.clear()
+	
 

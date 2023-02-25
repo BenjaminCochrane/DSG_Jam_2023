@@ -2,6 +2,8 @@ extends Node
 
 var deck = []
 
+var _discard = []
+
 #const card = preload("")
 #class_name Card, "res://Card.gd"
 
@@ -12,8 +14,10 @@ func _ready():
 	for i in range(3):
 		deck.append(Card.new())
 
-	for card in deck:
-		print(card.get_shape())
-
 func give_one_card():
 	deck.pop_front()
+
+func refill_deck():
+	randomize()
+	_discard.shuffle()
+	deck = _discard
