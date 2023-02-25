@@ -12,17 +12,24 @@ func _ready():
 	#Load pieces
 	for i in range (1,16):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
-		#pieces[i-1].snapping = Vector3(1,1,1)
+		
 	
+		#pieces[i-1].snapping = Vector3(1,1,1)
+	var position = Vector3((randi() % 9)*2, 5, (randi() % 9) * 2)
+	var new_shape = pieces[0].instance()#piece.instance()
+	
+	add_child(new_shape)
+	var direction = Vector3.RIGHT
+	new_shape.rotation.y = atan2(-direction.x, -direction.z)
 	#tile_size = Vector2(
 #		get_node("Cursor").texture.get_height(),
 #		get_node("Cursor").texture.get_width()
 #	)
 	#tile_size = Vector2(get_node("Cursor").size.x,get_node("Cursor").size.y)
 	#pieces[13]
-	for node in pieces[13].instance().get_children():
-		for child in node.get_children():
-			print(child.get_node("CollisionShape").shape.get_extents())
+	#for node in pieces[13].instance().get_children():
+	#	for child in node.get_children():
+	#		print(child.get_node("CollisionShape").shape.get_extents())
 	
 			#print(child.to_local(Vector3(1,1,1)))
 			
@@ -40,12 +47,20 @@ func _ready():
 	cursor.set_scale(Vector3(tile_size.x, tile_size.y, 1))
 	
 func spawn_shape_by_id(id, position):
+	position = position.snapped(tile_size)
 	var new_shape = pieces[id].instance()
 	
 	add_child(new_shape)
 	for node in new_shape.get_children():
 		for child in node.get_children():
 			child.translate(position)
+			
+func rotateAround(obj, point, axis, angle):
+	var rot = angle + obj.rotation.y 
+	var tStart = point
+	obj.global_translate (-tStart)
+	obj.transform = obj.transform.rotated(axis, -rot)
+	obj.global_translate (tStart)
 	
 func spawn_shape(position):
 	randomize()
@@ -53,13 +68,22 @@ func spawn_shape(position):
 	var new_shape = pieces[(randi() % len(pieces))].instance()#piece.instance()
 	#print(pieces)
 	#fnew_shape.
-	add_child(new_shape)
-		
 	for node in new_shape.get_children():
+		for child in node.get_children():
+			print(child.position.x, child.position.z)
+	add_child(new_shape)
+	new_shape.rotate_y(deg2rad(90.0))
+	#rotateAround(new_shape, Vector3.ZERO, Vector3(0,1,0), deg2rad(90))
+	#var current_rotation = new_shape.rotation
+	#current_rotation.y += deg2rad(90)
+	#new_shape.rotation = current_rotation
+	for node in new_shape.get_children():
+		#node.rotate(Vector3(0,0,90))
 		for child in node.get_children():
 			#var rounded_position = child.global_transform.origin.round_to_nearest(tile_size)
 			#child.global_transform.origin = rounded_position
 			child.translate(position)
+			
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -71,11 +95,11 @@ func _input(event):
 			#print("tile_hovered:",tile_hovered)
 			#print(grid_to_world(Vector3(2 * tile_hovered.x, 5, 2 * tile_hovered.y)))
 			#spawn_shape(grid_to_world(Vector3(2 * tile_hovered.x, 5, 2 * tile_hovered.z)))
-			print(Vector3(cast.position.x, 5, cast.position.z))
-			print(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))
-			print(world_to_grid(Vector3(cast.position.x, 5, cast.position.z)))
-			print("World:", grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
-			spawn_shape(0.5 * world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
+			#print(Vector3(cast.position.x, 5, cast.position.z))
+			#print(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))
+			#print(world_to_grid(Vector3(cast.position.x, 5, cast.position.z)))
+			#print("World:", grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
+			spawn_shape(world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
 			#spawn_shape(Vector3(cast.position.x, 5, cast.position.z))
 			
 	if event is InputEventMouseMotion:
