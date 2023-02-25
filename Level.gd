@@ -1,7 +1,7 @@
 extends Spatial
 
 var pieces = []
-var tile_size = Vector3.ZERO
+var tile_size = Vector3(2,2,2)
 const board_size = Vector2(11,11)
 const ray_length = 1000
 
@@ -12,16 +12,21 @@ func _ready():
 	#Load pieces
 	for i in range (1,16):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
+		#pieces[i-1].snapping = Vector3(1,1,1)
 	
-	tile_size = Vector2(
-		get_node("Cursor").texture.get_height(),
-		get_node("Cursor").texture.get_width()
-	)
+	#tile_size = Vector2(
+#		get_node("Cursor").texture.get_height(),
+#		get_node("Cursor").texture.get_width()
+#	)
 	#tile_size = Vector2(get_node("Cursor").size.x,get_node("Cursor").size.y)
 	#pieces[13]
 	for node in pieces[13].instance().get_children():
 		for child in node.get_children():
-			tile_size = child.get_scale()
+			print(child.get_node("CollisionShape").shape.get_extents())
+	
+			#print(child.to_local(Vector3(1,1,1)))
+			
+	#		tile_size = child.get_scale()
 	#tile_size = Vector3()
 	
 	#Scale Board
@@ -32,7 +37,7 @@ func _ready():
 		
 	#Scale Cursor
 	var cursor = get_node("Cursor")
-	cursor.set_scale(tile_size * 4)
+	cursor.set_scale(Vector3(tile_size.x, tile_size.y, 1))
 	
 func spawn_shape_by_id(id, position):
 	var new_shape = pieces[id].instance()
@@ -44,6 +49,7 @@ func spawn_shape_by_id(id, position):
 	
 func spawn_shape(position):
 	randomize()
+	position = position.snapped(tile_size)
 	var new_shape = pieces[(randi() % len(pieces))].instance()#piece.instance()
 	#print(pieces)
 	#fnew_shape.
@@ -51,6 +57,8 @@ func spawn_shape(position):
 		
 	for node in new_shape.get_children():
 		for child in node.get_children():
+			#var rounded_position = child.global_transform.origin.round_to_nearest(tile_size)
+			#child.global_transform.origin = rounded_position
 			child.translate(position)
 
 func _input(event):
@@ -63,7 +71,12 @@ func _input(event):
 			#print("tile_hovered:",tile_hovered)
 			#print(grid_to_world(Vector3(2 * tile_hovered.x, 5, 2 * tile_hovered.y)))
 			#spawn_shape(grid_to_world(Vector3(2 * tile_hovered.x, 5, 2 * tile_hovered.z)))
-			spawn_shape(Vector3(cast.position.x, 5, cast.position.z))
+			print(Vector3(cast.position.x, 5, cast.position.z))
+			print(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))
+			print(world_to_grid(Vector3(cast.position.x, 5, cast.position.z)))
+			print("World:", grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
+			spawn_shape(0.5 * world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
+			#spawn_shape(Vector3(cast.position.x, 5, cast.position.z))
 			
 	if event is InputEventMouseMotion:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
@@ -71,7 +84,7 @@ func _input(event):
 			#print(cast.position)
 			#print(tile_size)
 			var tile_hovered = world_to_grid(cast.position)#Vector3(position.x / 2), 0, floor(cast.position.z / 2))
-			print(tile_hovered)
+			#print(tile_hovered)
 			
 			var cursor = get_node("Cursor")
 			
@@ -105,7 +118,7 @@ func grid_to_world(pos):
 	print("pos:", pos)
 	var v = pos * tile_size
 	print("v:", v)
-	return v + tile_size /2.0
+	return v + tile_size #/ 2.0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
