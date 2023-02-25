@@ -21,8 +21,7 @@ func play(a):
 	
 	deck._discard = hand # dump the hand to the discard pile
 	discard_hand()
+	draw()
 			
 func discard_hand():
 	hand.clear()
-	
-

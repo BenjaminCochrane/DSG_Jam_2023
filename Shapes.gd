@@ -37,6 +37,6 @@ func _init():
 	
 	calculate_cost()
 	
-func calculate_cost():
+func calculate_cost():	
 	for e in Shapes.size():
 		Cost[e] = len(Shapes[e])
