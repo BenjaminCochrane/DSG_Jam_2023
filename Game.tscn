@@ -1,13 +1,15 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Deck.gd" type="Script" id=1]
 [ext_resource path="res://Card.gd" type="Script" id=2]
 [ext_resource path="res://ShapeBehaviours/Shape_Behaviour.gd" type="Script" id=3]
 [ext_resource path="res://ShapeBehaviours/ShapeL.gd" type="Script" id=4]
+[ext_resource path="res://Hand.gd" type="Script" id=5]
 
 [node name="Game" type="Spatial"]
 
 [node name="Hand" type="Node" parent="."]
+script = ExtResource( 5 )
 
 [node name="Deck" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -18,5 +20,5 @@ script = ExtResource( 2 )
 [node name="ShapeBehaviour" type="Node" parent="Card"]
 script = ExtResource( 3 )
 
-[node name="ShapeL" type="Node" parent="Card/ShapeBehaviour"]
+[node name="Shape2" type="Node" parent="Card/ShapeBehaviour"]
 script = ExtResource( 4 )
