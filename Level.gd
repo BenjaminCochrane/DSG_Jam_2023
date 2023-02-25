@@ -1,7 +1,7 @@
 extends Spatial
 
 var pieces = []
-var tile_size = Vector2.ZERO
+var tile_size = Vector3.ZERO
 const board_size = Vector2(11,11)
 const ray_length = 1000
 
@@ -13,12 +13,16 @@ func _ready():
 	for i in range (1,16):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
 	
-	print(pieces)
 	tile_size = Vector2(
 		get_node("Cursor").texture.get_height(),
 		get_node("Cursor").texture.get_width()
 	)
 	#tile_size = Vector2(get_node("Cursor").size.x,get_node("Cursor").size.y)
+	#pieces[13]
+	for node in pieces[13].instance().get_children():
+		for child in node.get_children():
+			tile_size = child.get_scale()
+	#tile_size = Vector3()
 	
 	#Scale Board
 	#var board = get_node("Floor")
@@ -28,7 +32,15 @@ func _ready():
 		
 	#Scale Cursor
 	var cursor = get_node("Cursor")
-	cursor.set_scale(Vector3(0.5 * board_size.x, 0.5 * board_size.y, 1))
+	cursor.set_scale(tile_size * 4)
+	
+func spawn_shape_by_id(id, position):
+	var new_shape = pieces[id].instance()
+	
+	add_child(new_shape)
+	for node in new_shape.get_children():
+		for child in node.get_children():
+			child.translate(position)
 	
 func spawn_shape(position):
 	randomize()
@@ -62,7 +74,8 @@ func _input(event):
 			print(tile_hovered)
 			
 			var cursor = get_node("Cursor")
-			cursor.translation = tile_hovered
+			
+			cursor.translation = Vector3(cast.position.x, 1.5 ,cast.position.z)
 
 	if event.is_action_pressed("ui_left"):
 		randomize()
@@ -85,14 +98,14 @@ func raycast_from_mouse(m_pos,collision_mask):
 	return space_state.intersect_ray(ray_start,ray_end, [], collision_mask)#["position"]
 
 func world_to_grid(pos):
-	var v = pos / Vector3(4,4,4)#tile_size
+	var v = pos / tile_size
 	return Vector3(floor(v.x), floor(v.y), floor(v.z))
 	
 func grid_to_world(pos):
 	print("pos:", pos)
-	var v = pos * Vector3(4,4,4)#tile_size
+	var v = pos * tile_size
 	print("v:", v)
-	return v + Vector3(4,4,4) #/2.0
+	return v + tile_size /2.0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
