@@ -19,5 +19,5 @@ func give_one_card():
 
 func refill_deck():
 	randomize()
-	#_discard.shuffle()
-	#deck = _discard
+	_discard.shuffle()
+	deck = _discard
