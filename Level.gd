@@ -11,7 +11,7 @@ var game_board = [[],[]]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#Load pieces
-	for i in range (1,22):
+	for i in range (1,21):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
 
 	#Make floor
