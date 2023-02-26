@@ -4,7 +4,7 @@ class_name ShapeL extends ShapeBehaviour
 #
 ##
 
-var direction_offsets = {"right": [1, 0], "left": [-1, 0], "up": [0, -1], "down": [0, 1]}
+
 var offset = [[Vector2(0,0), false], [Vector2(0,1), false], [Vector2(0,2), false], [Vector2(1,2), true, ["right"], -4]]
 
 
