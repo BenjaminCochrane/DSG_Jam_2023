@@ -1,9 +1,10 @@
 extends Spatial
 
 var pieces = []
-var tile_size = Vector3(2,2,2)
+var tile_size = Vector3(4,4,4)
 const board_size = Vector2(11,11)
 const ray_length = 1000
+const block = preload("res://assets/floor_block.tscn")
 
 var game_board = [[],[]]
 
@@ -13,15 +14,20 @@ func _ready():
 	for i in range (1,16):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
 
-	#var position = Vector3((randi() % 9)*2, 5, (randi() % 9) * 2)
-	#var new_shape = pieces[0].instance()#piece.instance()
-	
-	#add_child(new_shape)
-	#var direction = Vector3.RIGHT
-	#new_shape.rotation.y = atan2(-direction.x, -direction.z)
+	#Make floor
+	for i in range (0,12):
+		for j in range (0,12):
+			var new_piece = block.instance()
+			add_child(new_piece)
+			new_piece.translate(Vector3(2*i,0,2*j))
+			#print(Vector3(2*i, 0, 2*j))
 	
 	var cursor = get_node("Cursor")
 	cursor.set_scale(Vector3(tile_size.x, tile_size.y, 1))
+	
+	var pos = Vector3(11,0,11)
+	spawn_shape_by_id(11, pos)
+	spawn_shape_by_id(11, Vector3(0,0,0))
 	
 func set_game_board_element(vec, element):
 	game_board[vec.x][vec.y] = element
@@ -30,8 +36,9 @@ func get_game_board_element(vec):
 	return game_board[vec.x][vec.y]
 	
 func spawn_shape_by_id(id, position, direction = Vector3.ZERO):
-	position = position.snapped(tile_size)
-	var new_shape = pieces[id].instance()
+	#ASSUME PRE SNAPPED - Given grid position
+	position *= 2#position.snapped(tile_size)
+	var new_shape = pieces[id-1].instance()
 	
 	add_child(new_shape)
 	new_shape.translate(position)
@@ -50,9 +57,14 @@ func _input(event):
 	if event is InputEventMouseButton:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
 		if cast.get("position"):
-			print(cast['position'])
-			spawn_shape(world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
-			print(world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
+			
+			var pos = world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
+			#print(pos.x / tile_size.x <= 11)
+			var x = pos.x #/ tile_size.x
+			var z = pos.z #/ tile_size.z
+			if 0 <= x and x <= 22 and 0 <= z and z <= 22:
+				spawn_shape(pos)
+				print(world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
 			
 	if event is InputEventMouseMotion:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
