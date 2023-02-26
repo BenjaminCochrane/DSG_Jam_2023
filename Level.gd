@@ -11,7 +11,7 @@ var game_board = [[],[]]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#Load pieces
-	for i in range (1,16):
+	for i in range (1,22):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
 
 	#Make floor
@@ -24,10 +24,6 @@ func _ready():
 	
 	var cursor = get_node("Cursor")
 	cursor.set_scale(Vector3(tile_size.x, tile_size.y, 1))
-	
-	var pos = Vector3(11,0,11)
-	spawn_shape_by_id(11, pos)
-	spawn_shape_by_id(11, Vector3(0,0,0))
 	
 func set_game_board_element(vec, element):
 	game_board[vec.x][vec.y] = element
@@ -59,12 +55,12 @@ func _input(event):
 		if cast.get("position"):
 			
 			var pos = world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
-			#print(pos.x / tile_size.x <= 11)
+
 			var x = pos.x #/ tile_size.x
 			var z = pos.z #/ tile_size.z
 			if 0 <= x and x <= 22 and 0 <= z and z <= 22:
-				spawn_shape(pos)
-				print(world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size))))
+				spawn_shape(Vector3(cast.position.x, 1, cast.position.z))
+
 			
 	if event is InputEventMouseMotion:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
