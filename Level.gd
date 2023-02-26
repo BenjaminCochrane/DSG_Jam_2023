@@ -36,7 +36,7 @@ func get_game_board_element(vec):
 	return game_board[vec.x][vec.y]
 	
 func spawn_shape_by_id(id, position, direction = Vector3.ZERO):
-	#ASSUME PRE SNAPPED
+	#ASSUME PRE SNAPPED - Given grid position
 	position *= 2#position.snapped(tile_size)
 	var new_shape = pieces[id-1].instance()
 	

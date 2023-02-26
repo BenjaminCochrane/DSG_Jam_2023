@@ -33,6 +33,7 @@ script = ExtResource( 3 )
 
 [node name="Floor" type="StaticBody" parent="."]
 transform = Transform( 22, 0, 0, 0, 1, 0, 0, 0, 22, 22, 0, 22 )
+visible = false
 collision_mask = 3
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor"]
