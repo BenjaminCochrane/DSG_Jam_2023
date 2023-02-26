@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://fonts/ThatNogoFontCasual.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://images/waterfall.jpeg" type="Texture" id=2]
+[ext_resource path="res://fonts/ComicRelief-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://gamestartbutton.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 120
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 40
+font_data = ExtResource( 3 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = 1.0
+margin_right = -5.0
+margin_bottom = 1.0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 1031.0
+margin_bottom = 601.0
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Label" type="Label" parent="."]
+margin_left = 49.0
+margin_top = 35.0
+margin_right = 1014.0
+margin_bottom = 406.0
+custom_colors/font_color = Color( 0.0588235, 0.231373, 0.286275, 1 )
+custom_colors/font_color_shadow = Color( 0.87451, 0.321569, 0.129412, 1 )
+custom_constants/shadow_offset_x = 6
+custom_fonts/font = SubResource( 1 )
+text = "Water Those"
+align = 1
+valign = 1
+
+[node name="gamestartbutton" type="Button" parent="."]
+margin_left = 357.0
+margin_top = 433.0
+margin_right = 702.0
+margin_bottom = 569.0
+custom_colors/font_color = Color( 0.964706, 0.0823529, 0.0156863, 1 )
+custom_colors/font_color_hover = Color( 0.0784314, 0.627451, 0.698039, 1 )
+custom_colors/font_color_pressed = Color( 0.368627, 0.886275, 0.0470588, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "PLAY!"
+flat = true
+script = ExtResource( 4 )
