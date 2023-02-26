@@ -75,7 +75,7 @@ func spawn_shape(position, direction = Vector3.ZERO):
 	new_shape.rotation.y = atan2(-direction.x, -direction.z)
 	
 func _input(event):
-	if event is InputEventMouseButton and event.ipressed:
+	if event is InputEventMouseButton and event.pressed:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
 		if cast.get("position") and not event.is_echo():
 			
