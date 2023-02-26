@@ -11,8 +11,8 @@ onready var hand = get_node("/root/Game/Hand")
 func _ready():
 	randomize()
 	#deck.shuffle()
-	for i in range(16): #there are currently 16 unique shapes
-		deck.append(Card.new(i))
+	for i in range(20):
+		deck.append(Card.new())
 
 func give_one_card():
 	hand.hand.append(deck.pop_front())

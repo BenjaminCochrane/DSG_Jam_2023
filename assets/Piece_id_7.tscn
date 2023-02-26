@@ -33,7 +33,7 @@ mesh = SubResource( 1 )
 mesh_library = ExtResource( 1 )
 cell_scale = 1.282
 data = {
-"cells": PoolIntArray( 0, 0, 655360, 1, 0, 1048581, 0, 1, 5, 0, 65535, 5 )
+"cells": PoolIntArray( 0, 0, 5, 0, 1, 655360, 1, 1, 1048581, 0, 2, 5 )
 }
 __meta__ = {
 "_editor_clip_": 0

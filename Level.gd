@@ -6,7 +6,8 @@ const board_size = Vector2(11,11)
 const ray_length = 1000
 const block = preload("res://assets/floor_block.tscn")
 
-var game_board = [[],[]]
+var game_board = []
+var prev_board
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,6 +15,13 @@ func _ready():
 	for i in range (1,21):
 		pieces.append(load("res://assets/Piece_id_" + str(i) + ".tscn"))
 
+	#for i in range(0,board_size.x):
+	#	for j in range(0,board_size.y):
+	#		game_board[i][j] = 0
+	#for x in range(11):
+	#	game_board.append([])
+	#	for y in range(11):
+	#		game_board[x].append(0)
 	#Make floor
 	for i in range (0,12):
 		for j in range (0,12):
@@ -31,10 +39,27 @@ func set_game_board_element(vec, element):
 func get_game_board_element(vec):
 	return game_board[vec.x][vec.y]
 	
+func place_card(card, position,direction=Vector3.ZERO):
+	position *= 2
+	
+	var new_shape = pieces[card.get_id()].instance()
+	
+	var shape = card.get_shape()
+	var board_position = Vector2(position.x, position.z)
+	for vec2 in shape:
+		game_board[vec2.x][vec2.y] = 1
+	
+	game_board[board_position.x][board_position.y] = shape
+	
+	add_child(new_shape)
+	new_shape.translate(position)
+	new_shape.rotation.y = atan2(-direction.x, -direction.z)
+	
 func spawn_shape_by_id(id, position, direction = Vector3.ZERO):
 	#ASSUME PRE SNAPPED - Given grid position
 	position *= 2#position.snapped(tile_size)
 	var new_shape = pieces[id-1].instance()
+	
 	
 	add_child(new_shape)
 	new_shape.translate(position)
@@ -50,9 +75,9 @@ func spawn_shape(position, direction = Vector3.ZERO):
 	new_shape.rotation.y = atan2(-direction.x, -direction.z)
 	
 func _input(event):
-	if event is InputEventMouseButton and event.pressed:
+	if event is InputEventMouseButton:
 		var cast = raycast_from_mouse(get_viewport().get_mouse_position(), 1)
-		if cast.get("position"):
+		if cast.get("position") and not event.is_echo():
 			
 			var pos = world_to_grid(grid_to_world(Vector3(cast.position.x, 5, cast.position.z).snapped(Vector3.ONE * tile_size)))
 
@@ -71,16 +96,16 @@ func _input(event):
 			
 			cursor.translation = Vector3(cast.position.x, 1.5 ,cast.position.z)
 
-	if event.is_action_pressed("ui_left"):
-		randomize()
-		var new_shape = pieces[(randi() % len(pieces))].instance()
-		
-		add_child(new_shape)
-		
-		var position = Vector3((randi() % 9)*2, 5, (randi() % 9) * 2)
-		for node in new_shape.get_children():
-			for child in node.get_children():
-				child.translate(position)
+	#if event.is_action_pressed("ui_left"):
+	#	randomize()
+	#	var new_shape = pieces[(randi() % len(pieces))].instance()
+	#	
+	#	add_child(new_shape)
+	#	
+	#	var position = Vector3((randi() % 9)*2, 5, (randi() % 9) * 2)
+	#	for node in new_shape.get_children():
+	#		for child in node.get_children():
+	#			child.translate(position)
 
 
 func raycast_from_mouse(m_pos,collision_mask):
