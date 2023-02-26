@@ -36,8 +36,11 @@ func _init(id):
 	self.shape = Shapes[id]
 	self.cardName = titleList[id]
 	
-func getShape():
+func get_ID():
+	return self.shapeID
+	
+func get_shape():
 	return self.shape
 
-func getCardName():
+func get_card_name():
 	return self.cardName
